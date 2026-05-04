@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Benchmark for Robotics Security demo placeholder."
+    />
+    <title>Benchmark Demo</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #121417;
+        --muted: #5d6672;
+        --panel: rgba(255, 255, 255, 0.82);
+        --line: rgba(18, 20, 23, 0.12);
+        --accent: #0f766e;
+        --accent-strong: #0b4f4a;
+        --paper: #f7f3ea;
+        --sky: #d8edf0;
+        --coral: #ef7f6b;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        min-height: 100%;
+      }
+
+      body {
+        margin: 0;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        color: var(--ink);
+        background:
+          linear-gradient(135deg, rgba(216, 237, 240, 0.96), transparent 42%),
+          linear-gradient(315deg, rgba(239, 127, 107, 0.16), transparent 34%),
+          var(--paper);
+        overflow-x: hidden;
+      }
+
+      .page {
+        position: relative;
+        display: grid;
+        min-height: 100vh;
+        place-items: center;
+        padding: 40px 20px;
+        isolation: isolate;
+      }
+
+      #field {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.62;
+        z-index: -2;
+      }
+
+      .shell {
+        width: min(920px, 100%);
+      }
+
+      .panel {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        box-shadow: 0 24px 80px rgba(24, 38, 42, 0.16);
+        backdrop-filter: blur(24px);
+      }
+
+      .panel::before {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        content: "";
+        background:
+          linear-gradient(90deg, rgba(15, 118, 110, 0.2), transparent 38%),
+          linear-gradient(180deg, rgba(255, 255, 255, 0.8), transparent 48%);
+      }
+
+      .content {
+        position: relative;
+        display: grid;
+        gap: 52px;
+        padding: clamp(32px, 7vw, 72px);
+      }
+
+      .masthead {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      .mark {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+        color: var(--muted);
+        font-size: 0.84rem;
+        font-weight: 700;
+        letter-spacing: 0;
+        text-transform: uppercase;
+      }
+
+      .mark-symbol {
+        display: grid;
+        width: 36px;
+        height: 36px;
+        flex: 0 0 auto;
+        place-items: center;
+        border: 1px solid rgba(15, 118, 110, 0.18);
+        border-radius: 8px;
+        background: #ffffff;
+      }
+
+      .mark-symbol span {
+        width: 14px;
+        height: 14px;
+        border: 2px solid var(--accent);
+        border-top-color: var(--coral);
+        border-radius: 50%;
+        animation: spin 1.1s linear infinite;
+      }
+
+      .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--accent-strong);
+        font-size: 0.88rem;
+        font-weight: 700;
+      }
+
+      .status::before {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 0 6px rgba(15, 118, 110, 0.12);
+        content: "";
+      }
+
+      .hero {
+        display: grid;
+        gap: 22px;
+        max-width: 720px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(3.8rem, 12vw, 8.5rem);
+        line-height: 0.9;
+        letter-spacing: 0;
+      }
+
+      .lede {
+        max-width: 610px;
+        margin: 0;
+        color: var(--muted);
+        font-size: clamp(1.05rem, 2.1vw, 1.35rem);
+        line-height: 1.6;
+      }
+
+      .meta {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--line);
+      }
+
+      .meta-item {
+        min-width: 0;
+        padding: 18px;
+        background: rgba(255, 255, 255, 0.68);
+      }
+
+      .meta-label {
+        margin: 0 0 8px;
+        color: var(--muted);
+        font-size: 0.76rem;
+        font-weight: 700;
+        letter-spacing: 0;
+        text-transform: uppercase;
+      }
+
+      .meta-value {
+        margin: 0;
+        color: var(--ink);
+        font-size: 1rem;
+        font-weight: 750;
+        line-height: 1.35;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(1turn);
+        }
+      }
+
+      @media (max-width: 680px) {
+        .page {
+          place-items: stretch;
+          padding: 18px;
+        }
+
+        .content {
+          gap: 40px;
+          min-height: calc(100vh - 36px);
+        }
+
+        .masthead {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        h1 {
+          font-size: clamp(3.2rem, 20vw, 5rem);
+        }
+
+        .meta {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+          scroll-behavior: auto !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="field" aria-hidden="true"></canvas>
+
+    <main class="page">
+      <section class="shell" aria-label="Benchmark demo placeholder">
+        <div class="panel">
+          <div class="content">
+            <header class="masthead">
+              <div class="mark">
+                <span class="mark-symbol" aria-hidden="true"><span></span></span>
+                Benchmark for Robotics Security
+              </div>
+              <div class="status">Demo index pending</div>
+            </header>
+
+            <div class="hero">
+              <h1>Wait a moment.</h1>
+              <p class="lede">
+                The benchmark demo page is being prepared and will be refreshed
+                with the full index soon.
+              </p>
+            </div>
+
+            <div class="meta" aria-label="Update details">
+              <div class="meta-item">
+                <p class="meta-label">Page</p>
+                <p class="meta-value">Demo index</p>
+              </div>
+              <div class="meta-item">
+                <p class="meta-label">Update</p>
+                <p class="meta-value">May 7, 2026</p>
+              </div>
+              <div class="meta-item">
+                <p class="meta-label">Status</p>
+                <p class="meta-value">Preparing materials</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const canvas = document.querySelector("#field");
+      const context = canvas.getContext("2d");
+      const prefersReducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      );
+
+      let width = 0;
+      let height = 0;
+      let points = [];
+      let frame = 0;
+
+      function resize() {
+        const ratio = Math.min(window.devicePixelRatio || 1, 2);
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = Math.floor(width * ratio);
+        canvas.height = Math.floor(height * ratio);
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
+        context.setTransform(ratio, 0, 0, ratio, 0, 0);
+
+        const count = Math.max(28, Math.floor((width * height) / 24000));
+        points = Array.from({ length: count }, (_, index) => ({
+          x: ((index * 191) % width) + Math.random() * 18,
+          y: ((index * 113) % height) + Math.random() * 18,
+          vx: (Math.random() - 0.5) * 0.34,
+          vy: (Math.random() - 0.5) * 0.34,
+        }));
+      }
+
+      function draw() {
+        context.clearRect(0, 0, width, height);
+        context.lineWidth = 1;
+
+        points.forEach((point, index) => {
+          if (!prefersReducedMotion.matches) {
+            point.x += point.vx;
+            point.y += point.vy;
+
+            if (point.x < 0 || point.x > width) point.vx *= -1;
+            if (point.y < 0 || point.y > height) point.vy *= -1;
+          }
+
+          context.beginPath();
+          context.arc(point.x, point.y, 2.2, 0, Math.PI * 2);
+          context.fillStyle = index % 5 === 0 ? "#ef7f6b" : "#0f766e";
+          context.globalAlpha = 0.26;
+          context.fill();
+
+          for (let next = index + 1; next < points.length; next += 1) {
+            const other = points[next];
+            const distance = Math.hypot(point.x - other.x, point.y - other.y);
+
+            if (distance < 145) {
+              context.beginPath();
+              context.moveTo(point.x, point.y);
+              context.lineTo(other.x, other.y);
+              context.strokeStyle = "#264653";
+              context.globalAlpha = Math.max(0, 0.15 - distance / 1200);
+              context.stroke();
+            }
+          }
+        });
+
+        context.globalAlpha = 1;
+        frame = requestAnimationFrame(draw);
+      }
+
+      resize();
+      draw();
+      window.addEventListener("resize", resize);
+      prefersReducedMotion.addEventListener("change", () => {
+        cancelAnimationFrame(frame);
+        draw();
+      });
+    </script>
+  </body>
+</html>
