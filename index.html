@@ -23,6 +23,14 @@
       * { box-sizing: border-box; }
       html, body { min-height: 100%; }
 
+      #field {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        display: block;
+        pointer-events: none;
+      }
+
       body {
         margin: 0;
         font-family:
@@ -35,6 +43,7 @@
 
       .page {
         position: relative;
+        z-index: 1;
         display: grid;
         min-height: 100vh;
         place-items: start center;
@@ -206,7 +215,6 @@
         line-height: 1.65;
       }
 
-      /* Gallery of dataset examples */
       .gallery {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -307,7 +315,6 @@
         border-radius: 3px;
       }
 
-      /* Stats strip */
       .stats {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -343,7 +350,6 @@
         text-transform: uppercase;
       }
 
-      /* Downloads table */
       .table-wrap {
         overflow-x: auto;
         border-top: 1px solid var(--ink);
