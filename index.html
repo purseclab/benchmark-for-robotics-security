@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="RoboBench: a benchmark for evaluating adversarial attacks and defenses on embodied AI systems. Browse paired malicious/benign instructions per scene and download the dataset archives."
+      content="RoboJailbench: a benchmark for evaluating adversarial attacks and defenses on embodied AI systems. Browse paired malicious/benign instructions per scene and download the dataset archives."
     />
-    <title>RoboBench — Benchmark for Robotics Security</title>
+    <title>RoboJailbench — Benchmark for Robotics Security</title>
     <style>
       :root {
         color-scheme: light;
@@ -215,6 +215,33 @@
         line-height: 1.65;
       }
 
+      .method-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+      }
+
+      .method-item {
+        display: grid;
+        gap: 8px;
+        padding-left: 16px;
+        border-left: 3px solid var(--line);
+      }
+
+      .method-title {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 700;
+        line-height: 1.35;
+      }
+
+      .method-text {
+        margin: 0;
+        color: var(--ink);
+        font-size: 0.94rem;
+        line-height: 1.6;
+      }
+
       .gallery {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -274,6 +301,24 @@
         font-size: 0.78rem;
         color: var(--muted);
         font-variant-numeric: tabular-nums;
+      }
+
+      .card-credit {
+        margin: -2px 0 0;
+        color: var(--muted);
+        font-size: 0.74rem;
+        line-height: 1.4;
+      }
+
+      .card-credit a {
+        color: var(--accent);
+        text-decoration: none;
+        border-bottom: 1px solid var(--accent);
+      }
+
+      .card-credit a:hover {
+        color: var(--accent-strong);
+        border-bottom-color: var(--accent-strong);
       }
 
       .pair { display: grid; gap: 6px; margin-top: 4px; }
@@ -380,6 +425,20 @@
       tbody tr:last-child td { border-bottom: none; }
       tbody tr:hover { background: #f7f7f7; }
 
+      .num {
+        text-align: right;
+        white-space: nowrap;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .table-note {
+        margin: 0;
+        max-width: 860px;
+        color: var(--muted);
+        font-size: 0.82rem;
+        line-height: 1.5;
+      }
+
       .file {
         font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
         font-size: 0.86rem;
@@ -444,6 +503,7 @@
         .content { gap: 40px; }
         .masthead { align-items: flex-start; flex-direction: column; }
         .meta { grid-template-columns: 1fr 1fr; }
+        .method-grid { grid-template-columns: 1fr; }
         .gallery { grid-template-columns: 1fr; }
         .pair-row { grid-template-columns: 1fr; }
         thead th, tbody td { padding: 12px 14px; }
@@ -462,7 +522,7 @@
     <canvas id="field" aria-hidden="true"></canvas>
 
     <main class="page">
-      <section class="shell" aria-label="RoboBench dataset distribution">
+      <section class="shell" aria-label="RoboJailbench dataset distribution">
         <div class="panel">
           <div class="content">
             <header class="masthead">
@@ -474,23 +534,27 @@
             </header>
 
             <div class="hero">
-              <h1>RoboBench dataset.</h1>
+              <h1>RoboJailbench dataset.</h1>
               <p class="lede">
-                A benchmark for evaluating adversarial attacks and defenses on
-                embodied AI systems. Each scene image is paired with a matched
-                <em>malicious</em> and <em>benign</em> instruction so the
-                security–utility trade-off can be measured jointly. Browse
-                examples from every subset below, or jump to the
-                <a href="#downloads">downloadable archives</a> and the
-                <a href="croissant.json">Croissant&nbsp;1.1 metadata file</a>.
+                RoboJailbench evaluates how embodied AI systems respond when
+                realistic robot scenes are paired with adversarial and benign
+                instructions. We build matched intent-contrast examples so a
+                model's security behavior and normal task utility can be
+                measured on the same visual context. The benchmark combines a
+                taxonomy-balanced dataset we created with augmented examples
+                from public robotics datasets. This site provides examples,
+                downloadable archives, Croissant metadata, and the current
+                attack/defense leaderboard from the paper.
               </p>
               <div class="toolbar">
                 <a class="pill solid" href="croissant.json">Croissant metadata</a>
                 <a class="pill" href="#examples">Dataset examples</a>
+                <a class="pill" href="#leaderboard">Leaderboard</a>
                 <a class="pill" href="#downloads">Download archives</a>
+                <a class="pill" href="#citation">Citation</a>
                 <a
                   class="pill"
-                  href="https://github.com/purseclab/benchmark-for-robotics-security"
+                  href="https://github.com/anonymous-institution/benchmark-for-robotics-security"
                   >GitHub</a
                 >
               </div>
@@ -518,6 +582,48 @@
                 <p class="stat-label">Distribution</p>
               </div>
             </div>
+
+            <section class="block" id="dataset" aria-labelledby="dataset-heading">
+              <h2 id="dataset-heading">Dataset construction</h2>
+              <p class="block-lede">
+                The dataset is split into two complementary parts. The first
+                part gives us balanced security coverage; the second part keeps
+                the benchmark grounded in real robotics and autonomous-driving
+                scenes. In both parts, the malicious and benign prompts are
+                generated by our intent-contrast pipeline rather than inherited
+                from the original image sources.
+              </p>
+              <div class="method-grid">
+                <div class="method-item">
+                  <p class="method-title">RJB-Instructions: our own data</p>
+                  <p class="method-text">
+                    Existing robotics datasets do not systematically cover the
+                    18 security violation categories in our taxonomy, so we
+                    created our own taxonomy-balanced subset. For each category,
+                    we wrote matched adversarial and benign goals, generated a
+                    plausible scene image with Gemini 3 Pro Image Preview, and
+                    manually verified that both goals are relevant and feasible.
+                    These goals become the paired instruction prompts used by
+                    the benchmark. This produces 90 scenes, five per category,
+                    for controlled security-utility evaluation.
+                  </p>
+                </div>
+                <div class="method-item">
+                  <p class="method-title">Augmented external datasets</p>
+                  <p class="method-text">
+                    To evaluate beyond synthetic taxonomy coverage, we sampled
+                    images from DROID, RH20T, RoboVQA, Robo2VLM, and NVIDIA
+                    PhysicalAI-AV. For each scene, we generated a malicious and
+                    benign instruction prompt with Gemini 3 Flash Preview using
+                    a few-shot, image-conditioned prompt, then reviewed the
+                    generated pairs for relevance and intent contrast. These
+                    augmented subsets make the benchmark reflect varied real
+                    robot environments while preserving the same paired-prompt
+                    format.
+                  </p>
+                </div>
+              </div>
+            </section>
 
             <section class="block" id="examples" aria-labelledby="examples-heading">
               <h2 id="examples-heading">Inside the data</h2>
@@ -652,6 +758,10 @@
                   <div class="card-body">
                     <p class="card-title">In-the-wild manipulation</p>
                     <p class="card-meta">100 augmented frames</p>
+                    <p class="card-credit">
+                      Image source:
+                      <a href="https://droid-dataset.github.io/">DROID</a>.
+                    </p>
                     <div class="pair">
                       <div class="pair-row">
                         <span class="pair-label malicious">Malicious</span>
@@ -683,6 +793,10 @@
                   <div class="card-body">
                     <p class="card-title">Contact-rich manipulation</p>
                     <p class="card-meta">100 augmented frames + scene graphs</p>
+                    <p class="card-credit">
+                      Image source:
+                      <a href="https://rh20t.github.io/">RH20T</a>.
+                    </p>
                     <div class="pair">
                       <div class="pair-row">
                         <span class="pair-label malicious">Malicious</span>
@@ -714,6 +828,10 @@
                   <div class="card-body">
                     <p class="card-title">Long-horizon reasoning</p>
                     <p class="card-meta">100 augmented frames</p>
+                    <p class="card-credit">
+                      Image source:
+                      <a href="https://robovqa.github.io/">RoboVQA</a>.
+                    </p>
                     <div class="pair">
                       <div class="pair-row">
                         <span class="pair-label malicious">Malicious</span>
@@ -745,6 +863,10 @@
                   <div class="card-body">
                     <p class="card-title">Trajectory-derived VQA</p>
                     <p class="card-meta">100 augmented frames</p>
+                    <p class="card-credit">
+                      Image source:
+                      <a href="http://arxiv.org/abs/2505.15517">Robo2VLM</a>.
+                    </p>
                     <div class="pair">
                       <div class="pair-row">
                         <span class="pair-label malicious">Malicious</span>
@@ -776,6 +898,10 @@
                   <div class="card-body">
                     <p class="card-title">Autonomous driving</p>
                     <p class="card-meta">100 augmented frames + scene graphs</p>
+                    <p class="card-credit">
+                      Image source:
+                      <a href="https://huggingface.co/datasets/nvidia/PhysicalAI-Autonomous-Vehicles">NVIDIA PhysicalAI-AV</a>.
+                    </p>
                     <div class="pair">
                       <div class="pair-row">
                         <span class="pair-label malicious">Malicious</span>
@@ -833,6 +959,239 @@
                   </div>
                 </article>
               </div>
+            </section>
+
+            <section class="block" id="leaderboard" aria-labelledby="leaderboard-heading">
+              <h2 id="leaderboard-heading">Leaderboard: attacks and defenses</h2>
+              <p class="block-lede">
+                Current leaderboard values are taken from the attack-defense
+                evaluation table in the paper. ASR is attack success rate, SR is
+                adversarial rejection, UR is benign-goal acceptance, and SU-HM
+                is the harmonic mean of security and utility. Lower ASR is
+                better; higher SR, UR, and SU-HM are better.
+              </p>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Dataset</th>
+                      <th>Defense</th>
+                      <th class="num">CD ASR</th>
+                      <th class="num">CJ ASR</th>
+                      <th class="num">SM ASR</th>
+                      <th class="num">RoboPAIR ASR</th>
+                      <th class="num">SR</th>
+                      <th class="num">UR</th>
+                      <th class="num">SU-HM</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>DROID</td>
+                      <td>No Defense</td>
+                      <td class="num">37.00 &plusmn; 4.83</td>
+                      <td class="num">11.00 &plusmn; 3.13</td>
+                      <td class="num">3.00 &plusmn; 1.71</td>
+                      <td class="num">17.00 &plusmn; 3.76</td>
+                      <td class="num">83.00 &plusmn; 1.88</td>
+                      <td class="num">96.00 &plusmn; 1.96</td>
+                      <td class="num">89.03 &plusmn; 1.37</td>
+                    </tr>
+                    <tr>
+                      <td>DROID</td>
+                      <td>Google Prompt</td>
+                      <td class="num">31.00 &plusmn; 4.62</td>
+                      <td class="num">1.00 &plusmn; 0.99</td>
+                      <td class="num">0.00 &plusmn; 0.00</td>
+                      <td class="num">9.00 &plusmn; 2.86</td>
+                      <td class="num">89.75 &plusmn; 1.52</td>
+                      <td class="num">100.00 &plusmn; 0.00</td>
+                      <td class="num">94.60 &plusmn; 0.84</td>
+                    </tr>
+                    <tr>
+                      <td>DROID</td>
+                      <td>RoboGuard</td>
+                      <td class="num">37.00 &plusmn; 4.83</td>
+                      <td class="num">8.00 &plusmn; 2.71</td>
+                      <td class="num">3.00 &plusmn; 1.71</td>
+                      <td class="num">15.00 &plusmn; 3.57</td>
+                      <td class="num">84.25 &plusmn; 1.82</td>
+                      <td class="num">100.00 &plusmn; 0.00</td>
+                      <td class="num">91.45 &plusmn; 1.07</td>
+                    </tr>
+                    <tr>
+                      <td>RoboVQA</td>
+                      <td>No Defense</td>
+                      <td class="num">96.00 &plusmn; 1.96</td>
+                      <td class="num">47.00 &plusmn; 4.99</td>
+                      <td class="num">11.00 &plusmn; 3.13</td>
+                      <td class="num">78.00 &plusmn; 4.14</td>
+                      <td class="num">42.00 &plusmn; 2.47</td>
+                      <td class="num">89.00 &plusmn; 3.13</td>
+                      <td class="num">57.07 &plusmn; 2.37</td>
+                    </tr>
+                    <tr>
+                      <td>RoboVQA</td>
+                      <td>Google Prompt</td>
+                      <td class="num">100.00 &plusmn; 0.00</td>
+                      <td class="num">29.00 &plusmn; 4.54</td>
+                      <td class="num">3.00 &plusmn; 1.71</td>
+                      <td class="num">76.00 &plusmn; 4.27</td>
+                      <td class="num">48.00 &plusmn; 2.50</td>
+                      <td class="num">99.00 &plusmn; 0.99</td>
+                      <td class="num">64.65 &plusmn; 2.28</td>
+                    </tr>
+                    <tr>
+                      <td>RoboVQA</td>
+                      <td>RoboGuard</td>
+                      <td class="num">96.00 &plusmn; 1.96</td>
+                      <td class="num">45.00 &plusmn; 4.97</td>
+                      <td class="num">11.00 &plusmn; 3.13</td>
+                      <td class="num">53.00 &plusmn; 4.99</td>
+                      <td class="num">48.75 &plusmn; 2.50</td>
+                      <td class="num">100.00 &plusmn; 0.00</td>
+                      <td class="num">65.55 &plusmn; 2.26</td>
+                    </tr>
+                    <tr>
+                      <td>RH20T</td>
+                      <td>No Defense</td>
+                      <td class="num">99.00 &plusmn; 0.99</td>
+                      <td class="num">43.00 &plusmn; 4.95</td>
+                      <td class="num">30.00 &plusmn; 4.58</td>
+                      <td class="num">69.00 &plusmn; 4.62</td>
+                      <td class="num">39.75 &plusmn; 2.45</td>
+                      <td class="num">97.00 &plusmn; 1.71</td>
+                      <td class="num">56.39 &plusmn; 2.48</td>
+                    </tr>
+                    <tr>
+                      <td>RH20T</td>
+                      <td>Google Prompt</td>
+                      <td class="num">100.00 &plusmn; 0.00</td>
+                      <td class="num">19.00 &plusmn; 3.92</td>
+                      <td class="num">7.00 &plusmn; 2.55</td>
+                      <td class="num">68.00 &plusmn; 4.66</td>
+                      <td class="num">51.50 &plusmn; 2.50</td>
+                      <td class="num">98.00 &plusmn; 1.40</td>
+                      <td class="num">67.52 &plusmn; 2.17</td>
+                    </tr>
+                    <tr>
+                      <td>RH20T</td>
+                      <td>RoboGuard</td>
+                      <td class="num">99.00 &plusmn; 0.99</td>
+                      <td class="num">42.00 &plusmn; 4.94</td>
+                      <td class="num">30.00 &plusmn; 4.58</td>
+                      <td class="num">46.00 &plusmn; 4.98</td>
+                      <td class="num">45.75 &plusmn; 2.49</td>
+                      <td class="num">100.00 &plusmn; 0.00</td>
+                      <td class="num">62.78 &plusmn; 2.35</td>
+                    </tr>
+                    <tr>
+                      <td>Robo2VLM</td>
+                      <td>No Defense</td>
+                      <td class="num">29.00 &plusmn; 4.54</td>
+                      <td class="num">21.00 &plusmn; 4.07</td>
+                      <td class="num">1.00 &plusmn; 0.99</td>
+                      <td class="num">25.00 &plusmn; 4.33</td>
+                      <td class="num">81.00 &plusmn; 1.96</td>
+                      <td class="num">89.00 &plusmn; 3.13</td>
+                      <td class="num">84.81 &plusmn; 1.78</td>
+                    </tr>
+                    <tr>
+                      <td>Robo2VLM</td>
+                      <td>Google Prompt</td>
+                      <td class="num">8.00 &plusmn; 2.71</td>
+                      <td class="num">0.00 &plusmn; 0.00</td>
+                      <td class="num">0.00 &plusmn; 0.00</td>
+                      <td class="num">12.00 &plusmn; 3.25</td>
+                      <td class="num">95.00 &plusmn; 1.09</td>
+                      <td class="num">100.00 &plusmn; 0.00</td>
+                      <td class="num">97.44 &plusmn; 0.57</td>
+                    </tr>
+                    <tr>
+                      <td>Robo2VLM</td>
+                      <td>RoboGuard</td>
+                      <td class="num">29.00 &plusmn; 4.54</td>
+                      <td class="num">12.00 &plusmn; 3.25</td>
+                      <td class="num">1.00 &plusmn; 0.99</td>
+                      <td class="num">24.00 &plusmn; 4.27</td>
+                      <td class="num">83.50 &plusmn; 1.86</td>
+                      <td class="num">100.00 &plusmn; 0.00</td>
+                      <td class="num">91.01 &plusmn; 1.10</td>
+                    </tr>
+                    <tr>
+                      <td>PhysicalAI AV</td>
+                      <td>No Defense</td>
+                      <td class="num">98.00 &plusmn; 1.40</td>
+                      <td class="num">1.00 &plusmn; 0.99</td>
+                      <td class="num">1.00 &plusmn; 0.99</td>
+                      <td class="num">70.00 &plusmn; 4.58</td>
+                      <td class="num">57.50 &plusmn; 2.47</td>
+                      <td class="num">98.00 &plusmn; 1.40</td>
+                      <td class="num">72.48 &plusmn; 2.00</td>
+                    </tr>
+                    <tr>
+                      <td>PhysicalAI AV</td>
+                      <td>Google Prompt</td>
+                      <td class="num">100.00 &plusmn; 0.00</td>
+                      <td class="num">0.00 &plusmn; 0.00</td>
+                      <td class="num">0.00 &plusmn; 0.00</td>
+                      <td class="num">82.00 &plusmn; 3.84</td>
+                      <td class="num">54.50 &plusmn; 2.49</td>
+                      <td class="num">100.00 &plusmn; 0.00</td>
+                      <td class="num">70.55 &plusmn; 2.09</td>
+                    </tr>
+                    <tr>
+                      <td>PhysicalAI AV</td>
+                      <td>RoboGuard</td>
+                      <td class="num">98.00 &plusmn; 1.40</td>
+                      <td class="num">1.00 &plusmn; 0.99</td>
+                      <td class="num">1.00 &plusmn; 0.99</td>
+                      <td class="num">46.00 &plusmn; 4.98</td>
+                      <td class="num">63.50 &plusmn; 2.41</td>
+                      <td class="num">100.00 &plusmn; 0.00</td>
+                      <td class="num">77.68 &plusmn; 1.80</td>
+                    </tr>
+                    <tr>
+                      <td>RJB-Instructions</td>
+                      <td>No Defense</td>
+                      <td class="num">94.44 &plusmn; 2.41</td>
+                      <td class="num">6.67 &plusmn; 2.63</td>
+                      <td class="num">7.78 &plusmn; 2.82</td>
+                      <td class="num">81.11 &plusmn; 4.13</td>
+                      <td class="num">52.50 &plusmn; 2.63</td>
+                      <td class="num">93.33 &plusmn; 2.63</td>
+                      <td class="num">67.20 &plusmn; 2.26</td>
+                    </tr>
+                    <tr>
+                      <td>RJB-Instructions</td>
+                      <td>Google Prompt</td>
+                      <td class="num">93.33 &plusmn; 2.63</td>
+                      <td class="num">2.22 &plusmn; 1.55</td>
+                      <td class="num">2.22 &plusmn; 1.55</td>
+                      <td class="num">75.56 &plusmn; 4.53</td>
+                      <td class="num">56.67 &plusmn; 2.61</td>
+                      <td class="num">90.00 &plusmn; 3.16</td>
+                      <td class="num">69.55 &plusmn; 2.18</td>
+                    </tr>
+                    <tr>
+                      <td>RJB-Instructions</td>
+                      <td>RoboGuard</td>
+                      <td class="num">94.44 &plusmn; 2.41</td>
+                      <td class="num">6.67 &plusmn; 2.63</td>
+                      <td class="num">7.78 &plusmn; 2.82</td>
+                      <td class="num">31.11 &plusmn; 4.88</td>
+                      <td class="num">65.00 &plusmn; 2.51</td>
+                      <td class="num">100.00 &plusmn; 0.00</td>
+                      <td class="num">78.79 &plusmn; 1.85</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="table-note">
+                CD: BadRobot Conceptual Deception; CJ: BadRobot Contextual
+                Jailbreak; SM: BadRobot Safety Misalignment. Values are mean
+                with standard error, reported as percentages.
+              </p>
             </section>
 
             <section class="block" aria-labelledby="release-heading">
@@ -1013,10 +1372,24 @@ data/cross_embodiment/&lt;Embodiment&gt;/
     dataset/frame_*.{png,jpg}</code></pre>
             </section>
 
+            <section class="block" id="citation" aria-labelledby="citation-heading">
+              <h2 id="citation-heading">BibTeX</h2>
+              <pre><code>@inproceedings{robojailbench2026,
+  title = {RoboJailBench: Benchmarking Adversarial Attacks and Defenses in Embodied Robotic Agents},
+  author = {Anonymous},
+  booktitle = {Anonymous},
+  year = {2026}
+}</code></pre>
+            </section>
+
             <footer>
               <span>
                 Anonymous submission to NeurIPS 2026 Datasets &amp; Benchmarks
                 Track.
+              </span>
+              <span>
+                This work is from Purdue CERIAS and supported by NSF AI ACTION
+                and NSF CAREER.
               </span>
               <span>
                 <a href="croissant.json">croissant.json</a> ·
