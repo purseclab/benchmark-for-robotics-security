@@ -658,6 +658,43 @@
       text-decoration: underline;
     }
 
+    .funding-note p {
+      flex-basis: 100%;
+      margin: 0;
+      line-height: 1.65;
+    }
+
+    .sponsor-logos {
+      display: flex;
+      flex: 1 1 100%;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 24px 38px;
+      margin: 8px 0 2px;
+    }
+
+    .sponsor-logos a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 96px;
+      transition: opacity 160ms ease, transform 160ms ease;
+    }
+
+    .sponsor-logos a:hover {
+      opacity: 0.82;
+      transform: translateY(-1px);
+    }
+
+    .sponsor-logos img {
+      display: block;
+      width: auto;
+      max-width: 180px;
+      max-height: 56px;
+      object-fit: contain;
+    }
+
     @media (max-width: 980px) {
       h1 {
         font-size: 2.9rem;
@@ -734,6 +771,15 @@
       .button {
         min-height: 44px;
         padding: 0 16px;
+      }
+
+      .sponsor-logos {
+        gap: 18px 24px;
+      }
+
+      .sponsor-logos img {
+        max-width: 142px;
+        max-height: 44px;
       }
     }
 
