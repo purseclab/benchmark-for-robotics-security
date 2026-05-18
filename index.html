@@ -40,16 +40,23 @@
       min-height: 100%;
     }
 
+    html {
+      overflow-x: hidden;
+    }
+
     #field {
       position: fixed;
       inset: 0;
-      z-index: 0;
+      z-index: -1;
       display: block;
       pointer-events: none;
       opacity: 0.2;
     }
 
     body {
+      position: relative;
+      isolation: isolate;
+      overflow-x: hidden;
       margin: 0;
       font-family: "Manrope", ui-sans-serif, system-ui, -apple-system, sans-serif;
       color: var(--ink);
@@ -63,7 +70,7 @@
     body::before {
       position: fixed;
       inset: 0;
-      z-index: 0;
+      z-index: -1;
       pointer-events: none;
       content: "";
       opacity: 0.28;
@@ -75,15 +82,16 @@
 
     .page {
       position: relative;
-      z-index: 1;
-      display: grid;
+      z-index: 2;
+      width: min(1180px, calc(100% - 36px));
       min-height: 100vh;
-      place-items: start center;
-      padding: 0 18px 60px;
+      margin: 0 auto;
+      padding: 0 0 60px;
     }
 
     .shell {
-      width: min(1180px, 100%);
+      width: 100%;
+      min-width: 0;
     }
 
     .panel {
@@ -94,8 +102,17 @@
     .content {
       position: relative;
       display: grid;
+      grid-template-columns: minmax(0, 1fr);
       gap: 46px;
+      width: 100%;
+      min-width: 0;
       padding: 0;
+    }
+
+    .content > * {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
     }
 
     .masthead {
@@ -129,9 +146,10 @@
 
     .hero {
       display: block;
+      width: 100%;
       max-width: none;
-      margin: 0 auto;
-      padding: 78px 0 34px;
+      margin: 0;
+      padding: 62px 0 20px;
       text-align: center;
     }
 
@@ -147,17 +165,17 @@
       max-width: 980px;
       margin: 16px auto 20px;
       font-family: "Fraunces", Georgia, serif;
-      font-size: clamp(2.35rem, 5.4vw, 5.15rem);
+      font-size: 3.45rem;
       font-weight: 780;
-      line-height: 1.04;
-      letter-spacing: -0.045em;
+      line-height: 1.08;
+      letter-spacing: 0;
     }
 
     .authors {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 18px 22px;
-      max-width: 940px;
+      gap: 14px 20px;
+      max-width: 900px;
       margin: 8px auto 0;
       text-align: center;
     }
@@ -171,10 +189,10 @@
       padding-bottom: 0;
       border-bottom: 0;
       font-family: "Manrope", ui-sans-serif, system-ui, sans-serif;
-      font-size: clamp(0.98rem, 1.6vw, 1.16rem);
+      font-size: 1rem;
       font-weight: 800;
       line-height: 1.04;
-      letter-spacing: -0.02em;
+      letter-spacing: 0;
     }
 
     .authors p,
@@ -184,7 +202,7 @@
 
     .authors p {
       margin: 6px 0 2px;
-      font-size: 0.9rem;
+      font-size: 0.86rem;
       font-weight: 600;
     }
 
@@ -195,7 +213,7 @@
     }
 
     .author-note {
-      margin: 18px 0 0;
+      margin: 14px 0 0;
       font-size: 0.88rem;
       font-weight: 600;
     }
@@ -204,16 +222,16 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 12px;
-      margin-top: 28px;
+      gap: 10px;
+      margin-top: 24px;
     }
 
     .button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 46px;
-      padding: 0 20px;
+      min-height: 44px;
+      padding: 0 18px;
       border: 1px solid var(--line);
       border-radius: 999px;
       color: var(--ink);
@@ -288,15 +306,17 @@
 
     section.block {
       display: grid;
+      grid-template-columns: minmax(0, 1fr);
       gap: 16px;
+      min-width: 0;
     }
 
     h2 {
       margin: 0;
       font-family: "Fraunces", Georgia, serif;
-      font-size: clamp(1.4rem, 2.4vw, 1.75rem);
+      font-size: 1.75rem;
       font-weight: 780;
-      letter-spacing: -0.025em;
+      letter-spacing: 0;
       padding-bottom: 8px;
       border-bottom: 1px solid var(--line);
     }
@@ -313,6 +333,7 @@
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 24px;
+      min-width: 0;
     }
 
     .method-item {
@@ -338,8 +359,9 @@
 
     .gallery {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
       gap: 18px;
+      min-width: 0;
     }
 
     .card {
@@ -471,6 +493,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 0;
+      min-width: 0;
       border-top: 1px solid var(--line);
       border-bottom: 1px solid var(--line);
       background: rgba(255, 250, 240, 0.58);
@@ -507,6 +530,8 @@
     }
 
     .table-wrap {
+      max-width: 100%;
+      min-width: 0;
       overflow-x: auto;
       border-top: 1px solid var(--ink);
       border-bottom: 1px solid var(--ink);
@@ -591,6 +616,8 @@
     }
 
     pre {
+      max-width: 100%;
+      min-width: 0;
       margin: 0;
       padding: 16px 18px;
       background: #f7f7f7;
@@ -631,25 +658,41 @@
       text-decoration: underline;
     }
 
+    @media (max-width: 980px) {
+      h1 {
+        font-size: 2.9rem;
+      }
+    }
+
     @media (max-width: 760px) {
       .page {
-        padding: 18px;
+        width: calc(100% - 24px);
+        padding: 0 0 52px;
       }
 
       .content {
-        gap: 40px;
+        gap: 36px;
       }
 
       .hero {
-        padding-top: 52px;
+        padding-top: 44px;
       }
 
       h1 {
-        font-size: clamp(2.1rem, 11vw, 3.35rem);
+        font-size: 2.25rem;
+        line-height: 1.08;
+      }
+
+      h2 {
+        font-size: 1.45rem;
       }
 
       .authors {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .authors h2 {
+        font-size: 1rem;
       }
 
       .masthead {
@@ -680,8 +723,17 @@
     }
 
     @media (max-width: 560px) {
+      h1 {
+        font-size: 1.85rem;
+      }
+
       .authors {
         grid-template-columns: 1fr;
+      }
+
+      .button {
+        min-height: 44px;
+        padding: 0 16px;
       }
     }
 
