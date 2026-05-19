@@ -311,6 +311,47 @@
       min-width: 0;
     }
 
+    .summary {
+      display: grid;
+      grid-template-columns: minmax(220px, 0.42fr) minmax(0, 1fr);
+      gap: 32px;
+      align-items: start;
+      padding: 24px 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-heading {
+      display: grid;
+      gap: 8px;
+    }
+
+    .section-heading h2 {
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+
+    .section-heading span {
+      color: var(--clay);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .summary__body {
+      display: grid;
+      gap: 14px;
+      max-width: 790px;
+    }
+
+    .summary__body p {
+      margin: 0;
+      color: var(--ink);
+      font-size: 0.98rem;
+      line-height: 1.65;
+    }
+
     h2 {
       margin: 0;
       font-family: "Fraunces", Georgia, serif;
@@ -745,6 +786,11 @@
         grid-template-columns: 1fr;
       }
 
+      .summary {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
       .gallery {
         grid-template-columns: 1fr;
       }
@@ -864,6 +910,27 @@
               <p class="stat-label">Distribution</p>
             </div>
           </div>
+
+          <section class="summary" aria-labelledby="benchmark-goal">
+            <div class="section-heading">
+              <h2 id="benchmark-goal">Adversarial Safety for Embodied AI</h2>
+              <span>Motivation</span>
+            </div>
+            <div class="summary__body">
+              <p>
+                Robotic agents should not be evaluated only on whether they can follow everyday instructions. When a
+                vision-language model is connected to a physical platform, a jailbreak can translate into unsafe
+                scene-grounded actions such as colliding with people, damaging property, violating privacy, or bypassing
+                permissions.
+              </p>
+              <p>
+                RoboJailBench focuses on this embodied security setting: paired malicious and benign goals in the same
+                scene let researchers test whether attacks can induce unsafe behavior and whether defenses can block
+                those goals without suppressing useful, benign tasks. This page collects the dataset, examples,
+                leaderboard, downloads, and citation needed to reproduce those evaluations.
+              </p>
+            </div>
+          </section>
 
           <section class="block" id="dataset" aria-labelledby="dataset-heading">
             <h2 id="dataset-heading">Dataset construction</h2>
